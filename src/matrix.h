@@ -47,7 +47,7 @@ class S21Matrix {
     double& operator()(int i, int j);
 
     /* get class state */
-    bool is_empty() const;
+    bool is_empty_object() const;
 };
 
 #endif  /* SRC_MATRIX_H_ */
