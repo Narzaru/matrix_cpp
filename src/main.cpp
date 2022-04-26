@@ -4,28 +4,15 @@
 
 int main() {
   try {
-    S21Matrix matrix(5, 5);
-    for (int i = 0; i < matrix.get_rows(); ++i) {
-      for (int j = 0; j < matrix.get_columns(); ++j) {
-        matrix(i, j) = i + j + i * (matrix.get_columns() - 1);
-      }
-    }
+    S21Matrix matrix1(1, 2);
+    S21Matrix matrix2(2, 1);
+    S21Matrix answerMatrix(1, 1);
 
-    for (int i = 0; i < matrix.get_rows(); ++i) {
-      for (int j = 0; j < matrix.get_columns(); ++j) {
-        std::cout << std::setw(2) << matrix(i, j) << " ";
-      }
-      std::cout << std::endl;
-    }
+    matrix1.set_values({1, 2});
+    matrix2.set_values({3, 4});
+    answerMatrix.set_values({11});
 
-    S21Matrix matrix2(matrix);
-
-    for (int i = 0; i < matrix2.get_rows(); ++i) {
-      for (int j = 0; j < matrix2.get_columns(); ++j) {
-        std::cout << std::setw(2) << matrix2(i, j) << " ";
-      }
-      std::cout << std::endl;
-    }
+    matrix1.mul_matrix(matrix2);
   } catch(const std::exception& e) {
     std::cerr << e.what() << std::endl;
   }
