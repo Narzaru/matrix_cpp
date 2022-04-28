@@ -6,9 +6,8 @@
 #include <ostream>
 
 class S21Matrix {
-  // friend
-  friend std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
-
+ friend:
+  std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
  private:
   int m_rows;
   int m_columns;
@@ -31,11 +30,9 @@ class S21Matrix {
   // accessors
   int get_rows() const;
   int get_columns() const;
-
   // mutators
   void set_values(std::initializer_list<double> list);
   void set_values(std::initializer_list<std::initializer_list<double>> list);
-
   // mathematical methods
   bool eq_matrix(const S21Matrix& other) const;
   void sum_matrix(const S21Matrix& other);
@@ -46,6 +43,7 @@ class S21Matrix {
   S21Matrix calc_complements() const;
   double determinant() const;
   S21Matrix inverse_matrix() const;
+  S21Matrix minor_at(int m, int n) const;
 
   S21Matrix& operator+(S21Matrix other) const;
   S21Matrix& operator-(S21Matrix other) const;

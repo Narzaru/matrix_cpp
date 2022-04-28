@@ -127,6 +127,7 @@ void S21Matrix::set_values(std::initializer_list<std::initializer_list<double>> 
     }
     for (int i = 0; i < m_rows; ++i) {
       for (int j = 0; j < m_columns; ++j) {
+        // m_matrix[i][j] = list[i][j];
         m_matrix[index(i, j)] = *((list.begin() + i)->begin() + j);
       }
     }
@@ -193,6 +194,75 @@ void S21Matrix::mul_matrix(const S21Matrix& other) {
     throw std::range_error("matrix size error");
   }
 }
+
+S21Matrix S21Matrix::transpose() const {
+  S21Matrix new_matrix(m_columns, m_rows);
+  for (int i = 0; i < m_rows; ++i) {
+    for (int j = 0; j < m_columns; ++j) {
+      new_matrix(j, i) = (*this)(i, j);
+    }
+  }
+  return new_matrix;
+}
+
+S21Matrix S21Matrix::calc_complements() const {
+  if (m_rows == m_columns && m_rows != 0) {
+    S21Matrix new_matrix(m_columns, m_rows);
+    if (m_rows == 1) {
+      new_matrix.m_matrix[0] = 1;
+    } else {
+        for (int i = 0; i < m_rows; i++) {
+          for (int j = 0; j < m_columns; j++) {
+              S21Matrix minor = minor_at(i, j);
+              new_matrix(i, j) = std::pow(-1, i + j) * minor.determinant();
+          }
+        }
+    }
+    return new_matrix;
+  } else {
+    throw std::range_error("matrix is not square");
+  }
+}
+
+double S21Matrix::determinant() const {
+  double determinant;
+  double result = 0;
+  if (m_rows == 1) {
+    result = (*this)(0, 0);
+  } else if (m_rows == 2) {
+    result += (*this)(0, 0) * (*this)(1, 1);
+    result -= (*this)(1, 0) * (*this)(0, 1);
+  } else {
+    for (int i = 0; i < m_columns; i++) {
+      S21Matrix minor = minor_at(0, i);
+      result += std::pow(-1, i) * (*this)(0, i) * minor.determinant();
+    }
+  }
+  determinant = result;
+  return determinant;
+}
+
+S21Matrix S21Matrix::minor_at(int m, int n) const {
+  S21Matrix new_matrix(m_rows - 1, m_columns - 1);
+  for (int i = 0; i < m_rows; i++) {
+    for (int j = 0; j < m_columns; j++) {
+      if (i != m && j != n) {
+        if (i > m && j > n) {
+          new_matrix(i - 1, j - 1) = (*this)(i, j);
+        } else if (i > m) {
+          new_matrix(i - 1, j) = (*this)(i, j);
+        } else if (j > n) {
+          new_matrix(i, j - 1) = (*this)(i, j);
+        } else {
+          new_matrix(i, j) = (*this)(i, j);
+        }
+      }
+    }
+  }
+  return new_matrix;
+}
+
+S21Matrix S21Matrix::inverse_matrix() const {}
 
 /*************
  * OPERATORS *
