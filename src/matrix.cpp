@@ -56,10 +56,8 @@ S21Matrix::S21Matrix(const S21Matrix& other)
     m_matrix(nullptr) {
   if (!other.is_empty_object()) {
     m_matrix = new double[m_rows * m_columns];
-    for (int i = 0; i < m_rows; ++i) {
-      for (int j = 0; j < m_columns; ++j) {
-        m_matrix[i + j + i * (m_columns - 1)] = other.m_matrix[i + j + i * (m_columns - 1)];
-      }
+    for (int i = 0; i < m_rows * m_columns; ++i) {
+      m_matrix[i] = other.m_matrix[i];
     }
   }
 }
@@ -143,7 +141,7 @@ bool S21Matrix::eq_matrix(const S21Matrix& other) const {
   bool is_same = true;
   if (m_rows == other.m_rows && m_columns == other.m_columns) {
     for (int i = 0; i < m_rows * m_columns; ++i) {
-      if (std::abs(m_matrix[i] - other.m_matrix[i]) > std::numeric_limits<double>::epsilon()) {
+      if (std::abs(m_matrix[i] - other.m_matrix[i]) > std::numeric_limits<float>::epsilon()) {
         is_same = false;
       }
     }
@@ -225,21 +223,23 @@ S21Matrix S21Matrix::calc_complements() const {
 }
 
 double S21Matrix::determinant() const {
-  double determinant;
-  double result = 0;
-  if (m_rows == 1) {
-    result = (*this)(0, 0);
-  } else if (m_rows == 2) {
-    result += (*this)(0, 0) * (*this)(1, 1);
-    result -= (*this)(1, 0) * (*this)(0, 1);
-  } else {
-    for (int i = 0; i < m_columns; i++) {
-      S21Matrix minor = minor_at(0, i);
-      result += std::pow(-1, i) * (*this)(0, i) * minor.determinant();
+  if (m_rows == m_columns && m_rows != 0) {
+    double determinant;
+    if (m_rows == 1) {
+      determinant = (*this)(0, 0);
+    } else if (m_rows == 2) {
+      determinant += (*this)(0, 0) * (*this)(1, 1);
+      determinant -= (*this)(1, 0) * (*this)(0, 1);
+    } else {
+      for (int i = 0; i < m_columns; i++) {
+        S21Matrix minor = minor_at(0, i);
+        determinant += std::pow(-1, i) * (*this)(0, i) * minor.determinant();
+      }
     }
+    return determinant;
+  } else {
+    throw std::range_error("Matrix is not square");
   }
-  determinant = result;
-  return determinant;
 }
 
 S21Matrix S21Matrix::minor_at(int m, int n) const {
@@ -262,7 +262,16 @@ S21Matrix S21Matrix::minor_at(int m, int n) const {
   return new_matrix;
 }
 
-S21Matrix S21Matrix::inverse_matrix() const {}
+S21Matrix S21Matrix::inverse_matrix() const {
+  double deter = determinant();
+  if (fabs(deter) > std::numeric_limits<float>::epsilon()) {
+    S21Matrix new_matrix(std::move(calc_complements().transpose()));
+    new_matrix.mul_number(1./deter);
+    return new_matrix;
+  } else {
+    throw std::logic_error("determinant is zero");
+  }
+}
 
 /*************
  * OPERATORS *

@@ -322,6 +322,136 @@ namespace MatrixMulSuite {
   }
 }  // namespace MatrixMulSuite
 
+namespace MatrixTransposeSuite {
+  TEST(TransposeSuite, Test1) {
+    S21Matrix matrix1(2, 2);
+    S21Matrix matrix2(2, 2);
+    S21Matrix answerMatrix(2, 2);
+    matrix1.set_values({1, 2, 3, 4});
+    answerMatrix.set_values({1, 3, 2, 4});
+    matrix2 = matrix1.transpose();
+
+    ASSERT_TRUE(matrix2.eq_matrix(answerMatrix));
+  }
+
+  TEST(TransposeSuite, Test2) {
+    S21Matrix matrix1(3, 1);
+    S21Matrix matrix2;
+    S21Matrix answerMatrix(1, 3);
+    matrix1.set_values({1, 2, 3});
+    answerMatrix.set_values({1, 2, 3});
+    matrix2 = matrix1.transpose();
+
+    ASSERT_TRUE(matrix2.eq_matrix(answerMatrix));
+  }
+
+  TEST(TransposeSuite, Test3) {
+    S21Matrix matrix1(2, 4);
+    S21Matrix matrix2;
+    S21Matrix answerMatrix(4, 2);
+    matrix1.set_values({{1, 2, 3, 4}, {5, 6, 7, 8}});
+    answerMatrix.set_values({1, 5, 2, 6, 3, 7, 4, 8});
+    matrix2 = matrix1.transpose();
+
+    ASSERT_TRUE(matrix2.eq_matrix(answerMatrix));
+  }
+
+  TEST(TransposeSuite, Test4) {
+    S21Matrix matrix1(1, 1);
+    S21Matrix matrix2;
+    S21Matrix answerMatrix(1, 1);
+    matrix1.set_values({4});
+    answerMatrix.set_values({4});
+    matrix2 = matrix1.transpose();
+
+    ASSERT_TRUE(matrix2.eq_matrix(answerMatrix));
+  }
+}  // namespace MatrixTransposeSuite
+
+namespace MatrixComplementsSuite {
+  TEST(ComplementsSuite, Test1) {
+    S21Matrix matrix1(4, 4);
+    matrix1.set_values({1, 1, 1,  1, 1, 2, 1, 1, 1, 1, 3, 1, 1, 1, 1, 4});
+    S21Matrix answerMatrix(4, 4);
+    answerMatrix.set_values({17, -6, -3, -2, -6, 6, 0, 0, -3, 0, 3, 0, -2, 0, 0, 2});
+    S21Matrix matrix2(std::move(matrix1.calc_complements()));
+    ASSERT_TRUE(matrix2.eq_matrix(answerMatrix));
+  }
+
+  TEST(ComplementsSuite, Test2) {
+    S21Matrix matrix1(2, 2);
+    matrix1.set_values({1, 1, 1, 2});
+    S21Matrix answerMatrix(2, 2);
+    answerMatrix.set_values({2, -1, -1, 1});
+    S21Matrix matrix2(std::move(matrix1.calc_complements()));
+    ASSERT_TRUE(matrix2.eq_matrix(answerMatrix));
+  }
+
+  TEST(ComplementsSuite, Test3) {
+    S21Matrix matrix1(1, 1);
+    matrix1.set_values({1});
+    S21Matrix answerMatrix(1, 1);
+    answerMatrix.set_values({1});
+    S21Matrix matrix2(std::move(matrix1.calc_complements()));
+    ASSERT_TRUE(matrix2.eq_matrix(answerMatrix));
+  }
+
+  TEST(ComplementsSuite, Test4) {
+    S21Matrix matrix1(1, 4);
+    ASSERT_ANY_THROW(matrix1.calc_complements());
+  }
+}  // namespace MatrixComplementsSuite
+
+namespace MatrixDeterminantSuite {
+  TEST(DeterminantSuite, Test1) {
+    S21Matrix matrix1(3, 3);
+    matrix1.set_values({1, 2, 3, 21, 22, 23, 51, 52, 53});
+    ASSERT_FLOAT_EQ(matrix1.determinant(), 0);
+  }
+
+  TEST(DeterminantSuite, Test2) {
+    S21Matrix matrix1(3, 3);
+    matrix1.set_values({1, 8, 16, 1, 2, 3, 8, 4, 1});
+    ASSERT_FLOAT_EQ(matrix1.determinant(), -18);
+  }
+
+  TEST(DeterminantSuite, Test3) {
+    S21Matrix matrix1(3, 4);
+    ASSERT_ANY_THROW(matrix1.determinant());
+  }
+} // namespace MatrixDeterminantSuite
+
+namespace MatrixInverseSuite {
+  TEST(InverseSuite, Test1) {
+    S21Matrix matrix1(3, 3);
+    matrix1.set_values({1, 8, 16, 1, 2, 3, 8, 4, 1});
+    S21Matrix matrix2(std::move(matrix1.inverse_matrix()));
+    S21Matrix answer_matrix(3, 3);
+    answer_matrix.set_values({5./9, -28./9, 4./9, -23./18, 127./18, -13./18, 2./3, -10./3, 1./3});
+    ASSERT_TRUE(matrix2.eq_matrix(answer_matrix));
+  }
+
+  TEST(InverseSuite, Test2) {
+    S21Matrix matrix1(2, 2);
+    matrix1.set_values({1, 8, 16, 158});
+    S21Matrix matrix2(std::move(matrix1.inverse_matrix()));
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({79./15, -4./15, -8./15, 1./30});
+    ASSERT_TRUE(matrix2.eq_matrix(answer_matrix));
+  }
+
+  TEST(InverseSuite, Test3) {
+    S21Matrix matrix1(3, 3);
+    matrix1.set_values({1, 2, 3, 21, 22, 23, 51, 52, 53});
+    ASSERT_ANY_THROW(matrix1.inverse_matrix());
+  }
+
+  TEST(InverseSuite, Test4) {
+    S21Matrix matrix1(3, 4);
+    ASSERT_ANY_THROW(matrix1.inverse_matrix());
+  }
+} // namespace MatrixInverseSuite
+
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
