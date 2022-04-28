@@ -6,14 +6,15 @@
 #include <ostream>
 
 class S21Matrix {
- friend:
-  std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
+ friend std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
+
  private:
   int m_rows;
   int m_columns;
   double *m_matrix;
 
   int index(int i, int j) const;
+  S21Matrix minor_at(int m, int n) const;
 
  public:
   // default constructor
@@ -43,7 +44,6 @@ class S21Matrix {
   S21Matrix calc_complements() const;
   double determinant() const;
   S21Matrix inverse_matrix() const;
-  S21Matrix minor_at(int m, int n) const;
 
   S21Matrix& operator+(S21Matrix other) const;
   S21Matrix& operator-(S21Matrix other) const;
