@@ -1,5 +1,5 @@
-#ifndef SRC_MATRIX_H_
-#define SRC_MATRIX_H_
+#ifndef SRC_S21_MATRIX_OOP_H_
+#define SRC_S21_MATRIX_OOP_H_
 
 #include <exception>
 #include <initializer_list>
@@ -61,4 +61,4 @@ class S21Matrix {
   bool is_empty_object() const;
 };
 
-#endif  // SRC_MATRIX_H_
+#endif  // SRC_S21_MATRIX_OOP_H_

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include "matrix.h"
+#include "s21_matrix_oop.h"
 
 int main() {
   try {

@@ -5,7 +5,7 @@
 #include <initializer_list>
 #include <iomanip>
 #include <iostream>
-#include "matrix.h"
+#include "s21_matrix_oop.h"
 
 /********************
  * FRIEND FUNCTIONS *
