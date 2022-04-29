@@ -1,4 +1,4 @@
-CC := gcc
+CC := gcc -std=c++17
 CC_LANG := -xc++
 CPP_STD_LIB := -lstdc++
 LIBS := -lm
@@ -15,7 +15,7 @@ s21_matrix_oop.a:
 	ranlib $@
 
 test: s21_matrix_oop.a
-	$(CC) $(GTEST_CFLAGS) -o $@ ./tests/main_tests.cpp s21_matrix_oop.a -I. $(CPP_STD_LIB) $(LIBS) $(GTEST_LIBS)
+	$(CC) $(GTEST_CFLAGS) -o $@ ./tests/main_tests.cpp $^ -I. $(CPP_STD_LIB) $(LIBS) $(GTEST_LIBS)
 
 .PHONY: clean linter
 
@@ -31,5 +31,6 @@ linter:
 	find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
 	rm -f CPPLINT.cfg
 
-main.out: s21_matrix_oop.a
-	$(CC) -o main.out main.cpp s21_matrix_oop.a -lstdc++ -lm
+main.out: clean s21_matrix_oop.a
+	$(CC) -o main.out main.cpp s21_matrix_oop.a $(CPP_STD_LIB) $(LIBS)
+	./main.out
