@@ -38,22 +38,22 @@ class S21Matrix {
   bool eq_matrix(const S21Matrix& other) const;
   void sum_matrix(const S21Matrix& other);
   void sub_matrix(const S21Matrix& other);
-  void mul_number(const double num);
+  void mul_number(double num);
   void mul_matrix(const S21Matrix& other);
   S21Matrix transpose() const;
   S21Matrix calc_complements() const;
   double determinant() const;
   S21Matrix inverse_matrix() const;
 
-  S21Matrix& operator+(S21Matrix other) const;
-  S21Matrix& operator-(S21Matrix other) const;
-  S21Matrix& operator*(S21Matrix other) const;
-  S21Matrix& operator==(S21Matrix other) const;
-  S21Matrix& operator=(S21Matrix other) const;
-  S21Matrix& operator+=(S21Matrix other);
-  S21Matrix& operator-=(S21Matrix other);
-  S21Matrix& operator*=(S21Matrix other);
+  S21Matrix operator+(const S21Matrix& other) const;
+  S21Matrix operator-(const S21Matrix& other) const;
+  S21Matrix operator*(const S21Matrix& other) const;
+  bool operator==(const S21Matrix& other) const;
   S21Matrix& operator=(S21Matrix&& other);
+  void operator+=(const S21Matrix& other);
+  void operator-=(const S21Matrix& other);
+  void operator*=(const S21Matrix& other);
+  void operator*=(double num);
   double& operator()(int i, int j);
   double operator()(int i, int j) const;
 

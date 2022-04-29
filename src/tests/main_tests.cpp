@@ -452,6 +452,286 @@ namespace MatrixInverseSuite {
   }
 } // namespace MatrixInverseSuite
 
+namespace MatrixOperatorsSumSuite {
+  TEST(OperatorsSumSuite, Test1) {
+    S21Matrix matrix1(2, 2);
+    S21Matrix matrix2(2, 2);
+    matrix1.set_values({1, 2, 3, 4});
+    matrix2.set_values({-1, -2, -3, -4});
+    S21Matrix matrix3 = matrix1 + matrix2;
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({0, 0, 0, 0});
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSumSuite, Test2) {
+    S21Matrix matrix1(2, 2);
+    S21Matrix matrix2(2, 3);
+    ASSERT_ANY_THROW(matrix1 + matrix2);
+  }
+
+  TEST(OperatorsSumSuite, Test3) {
+    S21Matrix matrix1(2, 3);
+    S21Matrix matrix2(2, 3);
+    matrix1.set_values({1, 2, 3, 4, 5, 6});
+    matrix2.set_values({1, 2, 3, 4, 5, 6});
+    S21Matrix matrix3 = matrix1 + matrix2;
+    S21Matrix answer_matrix(2, 3);
+    answer_matrix.set_values({2, 4, 6, 8, 10, 12});
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSumSuite, Test4) {
+    S21Matrix matrix1(3, 2);
+    S21Matrix matrix2(3, 2);
+    matrix1.set_values({1, 2, 3, 4, 5, 6});
+    matrix2.set_values({1, 2, 3, 4, 5, 6});
+    S21Matrix matrix3 = matrix1 + matrix2;
+    S21Matrix answer_matrix(3, 2);
+    answer_matrix.set_values({2, 4, 6, 8, 10, 12});
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSumSuite, Test5) {
+    S21Matrix matrix1(3, 2);
+    S21Matrix matrix2(3, 2);
+    matrix1.set_values({1, 2, 3, 4, 5, 6});
+    matrix2.set_values({1, 2, 3, 4, 5, 6});
+    matrix1 += matrix2;
+    S21Matrix answer_matrix(3, 2);
+    answer_matrix.set_values({2, 4, 6, 8, 10, 12});
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSumSuite, Test6) {
+    S21Matrix matrix1(2, 3);
+    S21Matrix matrix2(2, 3);
+    matrix1.set_values({1, 2, 3, 4, 5, 6});
+    matrix2.set_values({-1, 2, -3, 4, 5, -12});
+    matrix1 += matrix2;
+    S21Matrix answer_matrix(2, 3);
+    answer_matrix.set_values({0, 4, 0, 8, 10, -6});
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSumSuite, Test7) {
+    S21Matrix matrix1(2, 3);
+    S21Matrix matrix2(3, 2);
+    ASSERT_ANY_THROW(matrix1 += matrix2);
+  }
+
+  TEST(OperatorsSumSuite, Test8) {
+    S21Matrix matrix1(3, 2);
+    S21Matrix matrix2(2, 3);
+    ASSERT_ANY_THROW(matrix1 += matrix2);
+  }
+}  // namespace MatrixOperatorsSumSuite
+
+namespace MatrixOperatorsSubSuite {
+  TEST(OperatorsSubSuite, Test1) {
+    S21Matrix matrix1(2, 2);
+    S21Matrix matrix2(2, 2);
+    matrix1.set_values({1, 2, 3, 8});
+    matrix2.set_values({1, 2, 3, 4});
+    S21Matrix matrix3 = matrix1 - matrix2;
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({0, 0, 0, 4});
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSubSuite, Test2) {
+    S21Matrix matrix1(2, 2);
+    S21Matrix matrix2(2, 3);
+    ASSERT_ANY_THROW(matrix1 - matrix2);
+  }
+
+  TEST(OperatorsSubSuite, Test3) {
+    S21Matrix matrix1(2, 3);
+    S21Matrix matrix2(2, 3);
+    matrix1.set_values({1, 2, 3, 4, 5, 8});
+    matrix2.set_values({1, 2, 3, 4, 5, 6});
+    S21Matrix matrix3 = matrix1 - matrix2;
+    S21Matrix answer_matrix(2, 3);
+    answer_matrix.set_values({0, 0, 0, 0, 0, 2});
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSubSuite, Test4) {
+    S21Matrix matrix1(3, 2);
+    S21Matrix matrix2(3, 2);
+    matrix1.set_values({1, 2, 3, 4, 5, 12});
+    matrix2.set_values({1, 2, 3, 4, 5, 6});
+    S21Matrix matrix3 = matrix1 - matrix2;
+    S21Matrix answer_matrix(3, 2);
+    answer_matrix.set_values({0, 0, 0, 0, 0, 6});
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSubSuite, Test5) {
+    S21Matrix matrix1(3, 2);
+    S21Matrix matrix2(3, 2);
+    matrix1.set_values({1, 2, 3, 4, 5, 2});
+    matrix2.set_values({1, 2, 3, 4, 5, 6});
+    matrix1 -= matrix2;
+    S21Matrix answer_matrix(3, 2);
+    answer_matrix.set_values({0, 0, 0, 0, 0, -4});
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSubSuite, Test6) {
+    S21Matrix matrix1(2, 3);
+    S21Matrix matrix2(2, 3);
+    matrix1.set_values({1, 2, 3, 4, 5, 6});
+    matrix2.set_values({-1, -2, -3, -4, -5, -6});
+    matrix1 -= matrix2;
+    S21Matrix answer_matrix(2, 3);
+    answer_matrix.set_values({2, 4, 6, 8, 10, 12});
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorsSubSuite, Test7) {
+    S21Matrix matrix1(2, 3);
+    S21Matrix matrix2(3, 2);
+    ASSERT_ANY_THROW(matrix1 -= matrix2);
+  }
+
+  TEST(OperatorsSubSuite, Test8) {
+    S21Matrix matrix1(3, 2);
+    S21Matrix matrix2(2, 3);
+    ASSERT_ANY_THROW(matrix1 -= matrix2);
+  }
+}  // namespace MatrixOperatorsSubSuite
+
+namespace MatrixOperatorMulSuite {
+  TEST(OperatorMulSuite, Test1) {
+    S21Matrix matrix1(2, 2);
+    matrix1.set_values({1, 2, 1, 2});
+    S21Matrix matrix2(2, 2);
+    matrix2.set_values({2, 1, 2, 1});
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({6, 3, 6, 3});
+
+    S21Matrix matrix3 = matrix1 * matrix2;
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test2) {
+    S21Matrix matrix1(2, 3);
+    matrix1.set_values({1, 2, 1, 2, 1, 2});
+    S21Matrix matrix2(3, 2);
+    matrix2.set_values({2, 1, 2, 1, 2, 1});
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({8, 4, 10, 5});
+
+    S21Matrix matrix3 = matrix1 * matrix2;
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test3) {
+    S21Matrix matrix1(3, 2);
+    matrix1.set_values({1, 2, 1, 2, 1, 2});
+    S21Matrix matrix2(2, 3);
+    matrix2.set_values({2, 1, 2, 1, 2, 1});
+    S21Matrix answer_matrix(3, 3);
+    answer_matrix.set_values({4, 5, 4, 4, 5, 4, 4, 5, 4});
+
+    S21Matrix matrix3 = matrix1 * matrix2;
+    ASSERT_TRUE(matrix3.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test4) {
+    S21Matrix matrix1(3, 1);
+    S21Matrix matrix2(2, 3);
+    ASSERT_ANY_THROW(matrix1 * matrix2);
+  }
+
+  TEST(OperatorMulSuite, Test5) {
+    S21Matrix matrix1(1, 3);
+    S21Matrix matrix2(4, 2);
+    ASSERT_ANY_THROW(matrix1 * matrix2);
+  }
+
+  TEST(OperatorMulSuite, Test6) {
+    S21Matrix matrix1(2, 2);
+    matrix1.set_values({1, 2, 1, 2});
+    S21Matrix matrix2(2, 2);
+    matrix2.set_values({2, 1, 2, 1});
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({6, 3, 6, 3});
+
+    matrix1 *= matrix2;
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test7) {
+    S21Matrix matrix1(2, 3);
+    matrix1.set_values({1, 2, 1, 2, 1, 2});
+    S21Matrix matrix2(3, 2);
+    matrix2.set_values({2, 1, 2, 1, 2, 1});
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({8, 4, 10, 5});
+
+    matrix1 *= matrix2;
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test8) {
+    S21Matrix matrix1(3, 2);
+    matrix1.set_values({1, 2, 1, 2, 1, 2});
+    S21Matrix matrix2(2, 3);
+    matrix2.set_values({2, 1, 2, 1, 2, 1});
+    S21Matrix answer_matrix(3, 3);
+    answer_matrix.set_values({4, 5, 4, 4, 5, 4, 4, 5, 4});
+
+    matrix1 *= matrix2;
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test9) {
+    S21Matrix matrix1(3, 1);
+    S21Matrix matrix2(2, 3);
+    ASSERT_ANY_THROW(matrix1 *= matrix2);
+  }
+
+  TEST(OperatorMulSuite, Test10) {
+    S21Matrix matrix1(1, 3);
+    S21Matrix matrix2(4, 2);
+    ASSERT_ANY_THROW(matrix1 *= matrix2);
+  }
+
+  TEST(OperatorMulSuite, Test11) {
+    S21Matrix matrix1(3, 2);
+    matrix1.set_values({2, 1, 2, 1, 2, 1});
+    S21Matrix answer_matrix(3, 2);
+    answer_matrix.set_values({2, 1, 2, 1, 2, 1});
+
+    matrix1 *= 1;
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test12) {
+    S21Matrix matrix1(1, 1);
+    matrix1.set_values({8});
+    S21Matrix answer_matrix(1, 1);
+    answer_matrix.set_values({16});
+
+    matrix1 *= 2;
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test13) {
+    S21Matrix matrix1(1, 1);
+    matrix1.set_values({16});
+    S21Matrix matrix2(1, 1);
+    matrix2.set_values({2});
+    S21Matrix answer_matrix(1, 1);
+    answer_matrix.set_values({32});
+
+    matrix1 *= matrix2;
+    ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+}  // MatrixOperatorMulSuite
+
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

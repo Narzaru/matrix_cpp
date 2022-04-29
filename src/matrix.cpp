@@ -171,7 +171,7 @@ void S21Matrix::sub_matrix(const S21Matrix& other) {
   }
 }
 
-void S21Matrix::mul_number(const double num) {
+void S21Matrix::mul_number(double num) {
   for (int i = 0; i < m_rows * m_columns; ++i) {
     m_matrix[i] *= num;
   }
@@ -298,6 +298,64 @@ double S21Matrix::operator()(int i, int j) const {
   } else {
     throw std::invalid_argument("calling a bad allocated or an already deleted object");
   }
+}
+
+S21Matrix S21Matrix::operator+(const S21Matrix& other) const {
+  if (m_rows == other.m_rows && m_columns == other.m_columns) {
+    S21Matrix new_matrix(m_rows, m_columns);
+    new_matrix.sum_matrix(*this);
+    new_matrix.sum_matrix(other);
+    return new_matrix;
+  } else {
+    throw std::out_of_range("index is out of range");
+  }
+}
+
+S21Matrix S21Matrix::operator-(const S21Matrix& other) const {
+  if (m_rows == other.m_rows && m_columns == other.m_columns) {
+    S21Matrix new_matrix(m_rows, m_columns);
+    new_matrix.sum_matrix(*this);
+    new_matrix.sub_matrix(other);
+    return new_matrix;
+  } else {
+    throw std::out_of_range("index is out of range");
+  }
+}
+
+S21Matrix S21Matrix::operator*(const S21Matrix& other) const {
+  if (m_columns == other.m_rows) {
+    S21Matrix new_matrix(m_rows, other.m_columns);
+    for (int k = 0; k < m_columns; ++k) {
+      for (int i = 0; i < new_matrix.m_rows; ++i) {
+        for (int j = 0; j < new_matrix.m_columns; ++j) {
+          new_matrix(i, j) += (*this)(i, k) * other(k, j);
+        }
+      }
+    }
+    return new_matrix;
+  } else {
+    throw std::range_error("matrix size error");
+  }
+}
+
+bool S21Matrix::operator==(const S21Matrix& other) const {
+  return eq_matrix(other);
+}
+
+void S21Matrix::operator+=(const S21Matrix& other) {
+  sum_matrix(other);
+}
+
+void S21Matrix::operator-=(const S21Matrix& other) {
+  sub_matrix(other);
+}
+
+void S21Matrix::operator*=(const S21Matrix& other) {
+  (*this) = std::move(operator*(other));
+}
+
+void S21Matrix::operator*=(double num) {
+  mul_number(num);
 }
 
 S21Matrix& S21Matrix::operator=(S21Matrix&& other) {
