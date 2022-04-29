@@ -6,7 +6,7 @@
 #include <ostream>
 
 class S21Matrix {
- friend std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
+  friend std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
 
  private:
   int m_rows;

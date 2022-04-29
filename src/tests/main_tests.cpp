@@ -419,7 +419,7 @@ namespace MatrixDeterminantSuite {
     S21Matrix matrix1(3, 4);
     ASSERT_ANY_THROW(matrix1.determinant());
   }
-} // namespace MatrixDeterminantSuite
+}  // namespace MatrixDeterminantSuite
 
 namespace MatrixInverseSuite {
   TEST(InverseSuite, Test1) {
@@ -450,7 +450,7 @@ namespace MatrixInverseSuite {
     S21Matrix matrix1(3, 4);
     ASSERT_ANY_THROW(matrix1.inverse_matrix());
   }
-} // namespace MatrixInverseSuite
+}  // namespace MatrixInverseSuite
 
 namespace MatrixOperatorsSumSuite {
   TEST(OperatorsSumSuite, Test1) {
@@ -730,7 +730,7 @@ namespace MatrixOperatorMulSuite {
     matrix1 *= matrix2;
     ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
   }
-}  // MatrixOperatorMulSuite
+}  // namespace MatrixOperatorMulSuite
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
