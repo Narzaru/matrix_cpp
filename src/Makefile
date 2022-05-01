@@ -1,21 +1,20 @@
-CC := gcc -std=c++17
-CC_LANG := -xc++
-CPP_STD_LIB := -lstdc++
+CC := g++ -std=c++17
 LIBS := -lm
 GTEST_CFLAGS := `pkg-config --cflags gtest`
 GTEST_LIBS := `pkg-config --libs gtest`
 
+#GTEST_LIBS := -lgtest
+
 all: s21_matrix_oop.a test
 	./test
 
-
 s21_matrix_oop.a:
-	$(CC) -c -o s21_matrix_oop.o s21_matrix_oop.cpp $(LIBS) $(CPP_STD_LIB)
+	$(CC) -c -o s21_matrix_oop.o s21_matrix_oop.cpp $(LIBS)
 	ar rcs $@ s21_matrix_oop.o
 	ranlib $@
 
 test: s21_matrix_oop.a
-	$(CC) $(GTEST_CFLAGS) -o $@ ./tests/main_tests.cpp $^ -I. $(CPP_STD_LIB) $(LIBS) $(GTEST_LIBS)
+	$(CC) $(GTEST_CFLAGS) -o $@ ./tests/main_tests.cpp $^ -I. $(LIBS) $(GTEST_LIBS)
 
 .PHONY: clean linter
 
@@ -32,5 +31,5 @@ linter:
 	rm -f CPPLINT.cfg
 
 main.out: clean s21_matrix_oop.a
-	$(CC) -o main.out main.cpp s21_matrix_oop.a $(CPP_STD_LIB) $(LIBS)
+	$(CC) -o main.out main.cpp s21_matrix_oop.a $(LIBS)
 	./main.out
