@@ -1,35 +1,56 @@
-CC := g++ -std=c++17
-LIBS := -lm
+CC := g++
+STANDART := -std=c++17
+CFLAG = -Wall -Wextra
+
 GTEST_CFLAGS := `pkg-config --cflags gtest`
 GTEST_LIBS := `pkg-config --libs gtest`
-
-#GTEST_LIBS := -lgtest
+INCLUDE_PATHS := .
+INCLUDE := $(addprefix -I,$(INCLUDE_PATHS))
 
 all: s21_matrix_oop.a test
-	./test
 
-s21_matrix_oop.a:
-	$(CC) -c -o s21_matrix_oop.o s21_matrix_oop.cpp $(LIBS)
-	ar rcs $@ s21_matrix_oop.o
+# lib build
+./build/obj/s21_matrix_oop.o: s21_matrix_oop.cpp
+	$(CC) $(STANDART) $(CFLAG) -c -o $@ $< $(INCLUDE)
+
+s21_matrix_oop.a: ./build/obj/s21_matrix_oop.o
+	ar -crs $@ $^
 	ranlib $@
 
-test: s21_matrix_oop.a
-	$(CC) $(GTEST_CFLAGS) -o $@ ./tests/main_tests.cpp $^ -I. $(LIBS) $(GTEST_LIBS)
+# test build
+./build/tobj/s21_matrix_oop.o: s21_matrix_oop.cpp
+	$(CC) --coverage $(STANDART) $(CFLAG) -c -o $@ $< $(INCLUDE)
 
-.PHONY: clean linter
+./build/tobj/test.o: test.cpp
+	$(CC) $(STANDART) $(GTEST_CFLAGS) $(CFLAG) -c -o $@ $< $(GTEST_LIBS) $(INCLUDE)
 
-clean:
-	rm -f test
-	find . -name "*.out" -delete
-	find . -name "*.o" -delete
-	find . -name "*.a" -delete
+test: ./build/tobj/s21_matrix_oop.o ./build/tobj/test.o
+	$(CC) $(STANDART) $(GTEST_CFLAGS) $(CFLAG) -o test $^ $(GTEST_LIBS) -lgcov $(INCLUDE)
+	./test
+
+gcov_report: test
+	./test
+	lcov --directory . -t "test" -o test.info -c --no-external
+	genhtml -o gcov_report test.info
+	@echo
+	@echo report path is `pwd`/report/index.html
+
+.PHONY: linter clean
+
 
 linter:
-	cp ../materials/linters/CPPLINT.cfg .
-	find . -name "*.cpp" -exec python3 ../materials/linters/cpplint.py {} \;
-	find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
-	rm -f CPPLINT.cfg
+	@echo cpplint
+	@cp ../materials/linters/CPPLINT.cfg .
+	@find . -name "*.cpp" -exec python3 ../materials/linters/cpplint.py {} \;
+	@find . -name "*.h" -exec python3 ../materials/linters/cpplint.py {} \;
+	@rm -f CPPLINT.cfg
 
-main.out: clean s21_matrix_oop.a
-	$(CC) -o main.out main.cpp s21_matrix_oop.a $(LIBS)
-	./main.out
+clean:
+	@find . -name "*.a" -delete
+	@find . -name "*.o" -delete
+	@find . -name "*.gcda" -delete
+	@find . -name "*.gcno" -delete
+	@find . -name "*.info" -delete
+	@rm -rf gcov_report
+	@rm -f test
+	@rm -f

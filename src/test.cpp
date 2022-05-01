@@ -7,19 +7,17 @@ namespace MatrixConstructorsSutie {
     ASSERT_NO_THROW(S21Matrix matrix);
   }
 
-  TEST(ConstructorsSutie, DestructorTest) {
-    S21Matrix matrix;
-    matrix.~S21Matrix();
-    ASSERT_NO_THROW(matrix.~S21Matrix());
-  }
-
   TEST(ConstructorsSutie, ConstructorTest2) {
     S21Matrix matrix(4, 1);
     ASSERT_EQ(matrix.get_rows(), 4);
     ASSERT_EQ(matrix.get_columns(), 1);
   }
 
-  TEST(ConstructorsSutie, CopyTest) {
+  TEST(ConstructorsSutie, ConstructorTest3) {
+    ASSERT_ANY_THROW(S21Matrix matrix(0, 0));
+  }
+
+  TEST(ConstructorsSutie, CopyTest1) {
     S21Matrix matrix1(2, 2);
     matrix1.set_values({{1, 2}, {3, 4}});
 
@@ -33,6 +31,15 @@ namespace MatrixConstructorsSutie {
         ASSERT_FLOAT_EQ(matrix2(i, j), matrix1(i, j));
       }
     }
+  }
+
+  TEST(ConstructorsSutie, CopyTest2) {
+    S21Matrix matrix1;
+    ASSERT_NO_THROW(matrix1 = matrix1);
+    S21Matrix matrix2;
+    ASSERT_NO_THROW(matrix2 = matrix1);
+    S21Matrix matrix3(4, 4);
+    ASSERT_NO_THROW(matrix1 = matrix3);
   }
 
   TEST(ConstructorsSutie, MoveTest1) {
@@ -74,6 +81,12 @@ namespace MatrixConstructorsSutie {
     ASSERT_EQ(matrix2.get_rows(), 10);
     ASSERT_EQ(matrix2.get_columns(), 1);
     ASSERT_EQ(matrix2.is_empty_object(), false);
+  }
+
+  TEST(ConstructorsSutie, DestructorTest) {
+    S21Matrix matrix;
+    matrix.~S21Matrix();
+    ASSERT_NO_THROW(matrix.~S21Matrix());
   }
 }  // namespace MatrixConstructorsSutie
 
@@ -731,6 +744,18 @@ namespace MatrixOperatorMulSuite {
     ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
   }
 }  // namespace MatrixOperatorMulSuite
+
+namespace MatrixOperatorEqualSuite {
+  TEST(OperatorEqualSuite, Test1) {
+    S21Matrix matrix1(1, 3);
+    S21Matrix matrix2(1, 3);
+
+    matrix1.set_values({1, 2, 3});
+    matrix2.set_values({3, 2, 1});
+
+    ASSERT_FALSE(matrix1 == matrix2);
+  }
+}  // namespace MatrixOperatorEqualSuite
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);

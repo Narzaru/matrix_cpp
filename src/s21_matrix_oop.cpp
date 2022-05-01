@@ -72,12 +72,12 @@ S21Matrix& S21Matrix::operator=(S21Matrix&& other) {
 // Copy assignment
 S21Matrix& S21Matrix::operator=(const S21Matrix& other) {
   if (this != &other) {
-    rows_ = other.rows_;
-    cols_ = other.cols_;
     if (matrix_ == nullptr || (rows_ * cols_ != other.rows_ * other.cols_)) {
       delete[] matrix_;
-      matrix_ = new double[rows_ * cols_];
+      matrix_ = new double[other.rows_ * other.cols_];
     }
+    rows_ = other.rows_;
+    cols_ = other.cols_;
     for (int i = 0; i < rows_; ++i) {
       for (int j = 0; j < cols_; ++j) {
         (*this)(i, j) = other(i, j);
