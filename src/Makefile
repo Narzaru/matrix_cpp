@@ -37,6 +37,9 @@ gcov_report: test
 
 .PHONY: linter clean
 
+main: s21_matrix_oop.a main.cpp
+	g++ -o $@ main.cpp $<
+	./$@
 
 linter:
 	@echo cpplint
@@ -53,4 +56,4 @@ clean:
 	@find . -name "*.info" -delete
 	@rm -rf gcov_report
 	@rm -f test
-	@rm -f
+	@rm -f main
