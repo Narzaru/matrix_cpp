@@ -1,7 +1,6 @@
 #ifndef SRC_S21_MATRIX_OOP_H_
 #define SRC_S21_MATRIX_OOP_H_
 
-#include <exception>
 #include <initializer_list>
 #include <ostream>
 
@@ -25,6 +24,8 @@ class S21Matrix {
   // accessors
   int get_rows() const;
   int get_columns() const;
+  void set_rows(const int& new_rows);
+  void set_columns(const int& new_rows);
   // mutators
   void set_values(std::initializer_list<double> list);
   void set_values(std::initializer_list<std::initializer_list<double>> list);
@@ -32,7 +33,7 @@ class S21Matrix {
   bool eq_matrix(const S21Matrix& other) const;
   void sum_matrix(const S21Matrix& other);
   void sub_matrix(const S21Matrix& other);
-  void mul_number(const double num);
+  void mul_number(const double& num);
   void mul_matrix(const S21Matrix& other);
   S21Matrix transpose() const;
   S21Matrix calc_complements() const;
@@ -55,14 +56,14 @@ class S21Matrix {
 
  private:
   int rows_;
-  int cols_;
+  int columns_;
   double *matrix_;
 
   // useful methods
   int index(int i, int j) const;
   S21Matrix minor_at(int m, int n) const;
 
-
+  friend S21Matrix operator*(const double& num, const S21Matrix& matrix);
   friend std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
 };
 

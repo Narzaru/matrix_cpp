@@ -123,6 +123,91 @@ namespace MatrixAccessorSuite {
   }
 }  // namespace MatrixAccessorSuite
 
+namespace MatrixMutatorsSuite {
+  TEST(MutatorsSuite, Test1) {
+    S21Matrix matrix;
+    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
+    ASSERT_NO_THROW(matrix.set_rows(4));
+    S21Matrix answer(4, 3);
+    answer.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3, 0, 0, 0});
+    ASSERT_TRUE(matrix == answer);
+  }
+
+  TEST(MutatorsSuite, Test2) {
+    S21Matrix matrix;
+    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
+    ASSERT_NO_THROW(matrix.set_rows(2));
+    S21Matrix answer(2, 3);
+    answer.set_values({1, 2, 3, 1, 2, 3});
+    ASSERT_TRUE(matrix == answer);
+  }
+
+  TEST(MutatorsSuite, Test3) {
+    S21Matrix matrix;
+    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
+    ASSERT_NO_THROW(matrix.set_columns(4));
+    S21Matrix answer(3, 4);
+    answer.set_values({1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0});
+    ASSERT_TRUE(matrix == answer);
+  }
+
+  TEST(MutatorsSuite, Test4) {
+    S21Matrix matrix;
+    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
+    ASSERT_NO_THROW(matrix.set_columns(2));
+    S21Matrix answer(3, 2);
+    answer.set_values({1, 2, 1, 2, 1, 2});
+    ASSERT_TRUE(matrix == answer);
+  }
+
+  TEST(MutatorsSuite, Test5) {
+    S21Matrix matrix;
+    ASSERT_ANY_THROW(matrix.set_columns(0));
+  }
+
+  TEST(MutatorsSuite, Test6) {
+    S21Matrix matrix;
+    ASSERT_ANY_THROW(matrix.set_columns(0));
+  }
+
+  TEST(MutatorsSuite, Test7) {
+    S21Matrix matrix;
+    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
+    ASSERT_NO_THROW(matrix.set_rows(7));
+    S21Matrix answer(7, 3);
+    answer.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    ASSERT_TRUE(matrix == answer);
+  }
+
+  TEST(MutatorsSuite, Test8) {
+    S21Matrix matrix;
+    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
+    ASSERT_NO_THROW(matrix.set_rows(1));
+    S21Matrix answer(1, 3);
+    answer.set_values({1, 2, 3});
+    ASSERT_TRUE(matrix == answer);
+  }
+
+  TEST(MutatorsSuite, Test9) {
+    S21Matrix matrix;
+    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
+    ASSERT_NO_THROW(matrix.set_columns(7));
+    S21Matrix answer(3, 7);
+    answer.set_values({1, 2, 3, 0, 0, 0, 0, 1, 2, 3, 0, 0, 0, 0, 1, 2, 3, 0, 0, 0, 0});
+    ASSERT_TRUE(matrix == answer);
+  }
+
+  TEST(MutatorsSuite, Test10) {
+    S21Matrix matrix;
+    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
+    ASSERT_NO_THROW(matrix.set_columns(1));
+    S21Matrix answer(3, 1);
+    answer.set_values({1, 1, 1});
+    std::cout << answer << std::endl << matrix;
+    ASSERT_TRUE(matrix == answer);
+  }
+}  // namespace MatrixMutatorsSuite
+
 namespace MatrixOperatorRoundBracketSuite {
   TEST(OperatorRoundBracketSuite, Test1) {
     S21Matrix matrix;
@@ -742,6 +827,16 @@ namespace MatrixOperatorMulSuite {
 
     matrix1 *= matrix2;
     ASSERT_TRUE(matrix1.eq_matrix(answer_matrix));
+  }
+
+  TEST(OperatorMulSuite, Test14) {
+    S21Matrix matrix1(2, 2);
+    matrix1.set_values({1, 2, 3, 4});
+    S21Matrix matrix2 = std::move(1 * matrix1);
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({1, 2, 3, 4});
+
+    ASSERT_TRUE(matrix2.eq_matrix(answer_matrix));
   }
 }  // namespace MatrixOperatorMulSuite
 

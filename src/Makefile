@@ -1,5 +1,5 @@
-CC := g++
-STANDART := -std=c++17
+CC := g++ -g -fsanitize=address
+STD := -std=c++17
 CFLAG = -Wall -Wextra
 
 GTEST_CFLAGS := `pkg-config --cflags gtest`
@@ -11,7 +11,7 @@ all: s21_matrix_oop.a test
 
 # lib build
 ./build/obj/s21_matrix_oop.o: s21_matrix_oop.cpp
-	$(CC) $(STANDART) $(CFLAG) -c -o $@ $< $(INCLUDE)
+	$(CC) $(STD) $(CFLAG) -c -o $@ $< $(INCLUDE)
 
 s21_matrix_oop.a: ./build/obj/s21_matrix_oop.o
 	ar -crs $@ $^
@@ -19,13 +19,13 @@ s21_matrix_oop.a: ./build/obj/s21_matrix_oop.o
 
 # test build
 ./build/tobj/s21_matrix_oop.o: s21_matrix_oop.cpp
-	$(CC) --coverage $(STANDART) $(CFLAG) -c -o $@ $< $(INCLUDE)
+	$(CC) --coverage $(STD) $(CFLAG) -c -o $@ $< $(INCLUDE)
 
 ./build/tobj/test.o: test.cpp
-	$(CC) $(STANDART) $(GTEST_CFLAGS) $(CFLAG) -c -o $@ $< $(GTEST_LIBS) $(INCLUDE)
+	$(CC) $(STD) $(GTEST_CFLAGS) $(CFLAG) -c -o $@ $< $(GTEST_LIBS) $(INCLUDE)
 
 test: ./build/tobj/s21_matrix_oop.o ./build/tobj/test.o
-	$(CC) $(STANDART) $(GTEST_CFLAGS) $(CFLAG) -o test $^ $(GTEST_LIBS) -lgcov $(INCLUDE)
+	$(CC) $(STD) $(GTEST_CFLAGS) $(CFLAG) -o test $^ $(GTEST_LIBS) -lgcov $(INCLUDE)
 	./test
 
 gcov_report: test
