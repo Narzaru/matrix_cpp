@@ -10,9 +10,7 @@ int main() {
     // matrix2.set_values({3, 4});
     // S21Matrix matrix3(std::move(matrix1 * matrix2));
     // std::cout << matrix1 << std::endl << matrix2 << std::endl << matrix3;
-    S21Matrix matrix;
-    matrix.set_values({1, 2, 3, 1, 2, 3, 1, 2, 3});
-    matrix.set_columns(4);
+    S21Matrix matrix(matrix);
   } catch(const std::exception& e) {
     std::cerr << e.what() << std::endl;
   }

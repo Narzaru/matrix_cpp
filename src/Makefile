@@ -1,4 +1,4 @@
-CC := g++ -g -fsanitize=address
+CC := g++
 STD := -std=c++17
 CFLAG = -Wall -Wextra
 
