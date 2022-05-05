@@ -5,6 +5,9 @@
 #include <ostream>
 
 class S21Matrix {
+  friend S21Matrix operator*(const double& num, const S21Matrix& matrix);
+  friend std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
+
  public:
   // default constructor
   S21Matrix();
@@ -24,12 +27,12 @@ class S21Matrix {
   // accessors
   int get_rows() const;
   int get_columns() const;
-  void set_rows(const int& new_rows);
-  void set_columns(const int& new_rows);
   // mutators
   void set_values(std::initializer_list<double> list);
   void set_values(std::initializer_list<std::initializer_list<double>> list);
-  // mathematical methods
+  void set_rows(const int& new_rows);
+  void set_columns(const int& new_rows);
+  // methods
   bool eq_matrix(const S21Matrix& other) const;
   void sum_matrix(const S21Matrix& other);
   void sub_matrix(const S21Matrix& other);
@@ -43,6 +46,7 @@ class S21Matrix {
   S21Matrix operator+(const S21Matrix& other) const;
   S21Matrix operator-(const S21Matrix& other) const;
   S21Matrix operator*(const S21Matrix& other) const;
+  S21Matrix operator*(double num) const;
   bool operator==(const S21Matrix& other) const;
   S21Matrix& operator+=(const S21Matrix& other);
   S21Matrix& operator-=(const S21Matrix& other);
@@ -50,9 +54,6 @@ class S21Matrix {
   S21Matrix& operator*=(double num);
   double& operator()(int i, int j);
   double operator()(int i, int j) const;
-
-  // get class state
-  bool is_empty_object() const;
 
  private:
   int rows_;
@@ -62,9 +63,7 @@ class S21Matrix {
   // useful methods
   int index(int i, int j) const;
   S21Matrix minor_at(int m, int n) const;
-
-  friend S21Matrix operator*(const double& num, const S21Matrix& matrix);
-  friend std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix);
+  static void copy_matrices(S21Matrix &matrix1, const S21Matrix &matrix2, int rows, int cols);
 };
 
 #endif  // SRC_S21_MATRIX_OOP_H_

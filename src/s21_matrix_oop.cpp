@@ -1,8 +1,27 @@
 // #include <stdexcept>
+#include <limits>
 #include <cmath>
 #include <initializer_list>
 #include <iomanip>
 #include "s21_matrix_oop.h"
+
+
+// friends
+S21Matrix operator*(const double& num, const S21Matrix& matrix) {
+  S21Matrix new_matrix(matrix);
+  new_matrix.mul_number(num);
+  return new_matrix;
+}
+
+std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix) {
+  for (int i = 0; i < matrix.rows_; ++i) {
+    for (int j = 0; j < matrix.columns_; ++j) {
+      os << std::setw(2) << matrix(i, j) << " ";
+    }
+    os << std::endl;
+  }
+  return os;
+}
 
 // Base constructor with no arguments.
 // It create a 3x3 zero matrix.
@@ -28,17 +47,15 @@ S21Matrix::S21Matrix(int rows, int cols)
   std::fill(matrix_, matrix_ + (rows_ * columns_), 0.0);
 }
 
-// Copy constructor with const S21Matrix& argument.
-// It allocates a new matrix and copy other matrix.
+// Copy constructor.
+// It allocates a new matrix and copy values from other matrix.
 S21Matrix::S21Matrix(const S21Matrix& other)
   : rows_(other.rows_),
     columns_(other.columns_),
     matrix_(nullptr) {
-  if (!other.is_empty_object()) {
+  if (other.matrix_ != nullptr) {
     matrix_ = new double[rows_ * columns_];
-    for (int i = 0; i < rows_ * columns_; ++i) {
-      matrix_[i] = other.matrix_[i];
-    }
+    copy_matrices(*this, other, rows_, columns_);
   }
 }
 
@@ -74,11 +91,7 @@ S21Matrix& S21Matrix::operator=(const S21Matrix& other) {
     }
     rows_ = other.rows_;
     columns_ = other.columns_;
-    for (int i = 0; i < rows_; ++i) {
-      for (int j = 0; j < columns_; ++j) {
-        (*this)(i, j) = other(i, j);
-      }
-    }
+    copy_matrices(*this, other, rows_, columns_);
   }
   return *this;
 }
@@ -104,14 +117,17 @@ void S21Matrix::set_rows(const int& new_rows) {
     throw std::out_of_range("value cannot be less than or equal to zero");
   }
 
-  S21Matrix new_matrix(new_rows, columns_);
-  double limit = new_rows > rows_ ? rows_ : new_rows;
-  for (int i = 0; i < limit; ++i) {
-    for (int j = 0; j < columns_; ++j) {
-      new_matrix(i, j) = (*this)(i, j);
-    }
+  if (rows_ != new_rows) {
+    S21Matrix new_matrix(new_rows, columns_);
+    double limit = new_rows > rows_ ? rows_ : new_rows;
+    copy_matrices(new_matrix, *this, limit, columns_);
+    // for (int i = 0; i < limit; ++i) {
+    //   for (int j = 0; j < columns_; ++j) {
+    //     new_matrix(i, j) = (*this)(i, j);
+    //   }
+    // }
+    (*this) = std::move(new_matrix);
   }
-  (*this) = std::move(new_matrix);
 }
 
 void S21Matrix::set_columns(const int& new_cols) {
@@ -119,14 +135,17 @@ void S21Matrix::set_columns(const int& new_cols) {
     throw std::out_of_range("value cannot be less than or equal to zero");
   }
 
-  S21Matrix new_matrix(rows_, new_cols);
-  double limit = new_cols > columns_ ? columns_ : new_cols;
-  for (int i = 0; i < rows_; ++i) {
-    for (int j = 0; j < limit; ++j) {
-      new_matrix(i, j) = (*this)(i, j);
-    }
+  if (columns_ != new_cols) {
+    S21Matrix new_matrix(rows_, new_cols);
+    double limit = new_cols > columns_ ? columns_ : new_cols;
+    copy_matrices(new_matrix, *this, rows_, limit);
+    // for (int i = 0; i < rows_; ++i) {
+    //   for (int j = 0; j < limit; ++j) {
+    //     new_matrix(i, j) = (*this)(i, j);
+    //   }
+    // }
+    (*this) = std::move(new_matrix);
   }
-  (*this) = std::move(new_matrix);
 }
 
 void S21Matrix::set_values(std::initializer_list<double> list) {
@@ -152,23 +171,22 @@ void S21Matrix::set_values(std::initializer_list<std::initializer_list<double>> 
   for (int i = 0; i < rows_; ++i) {
     for (int j = 0; j < columns_; ++j) {
       // m_matrix[i][j] = list[i][j];
-      matrix_[index(i, j)] = *((list.begin() + i)->begin() + j);
+      (*this)(i, j) = *((list.begin() + i)->begin() + j);
     }
   }
 }
 
 bool S21Matrix::eq_matrix(const S21Matrix& other) const {
-  bool is_same = true;
   if (rows_ == other.rows_ && columns_ == other.columns_) {
     for (int i = 0; i < rows_ * columns_; ++i) {
       if (std::abs(matrix_[i] - other.matrix_[i]) > std::numeric_limits<float>::epsilon()) {
-        is_same = false;
+        return false;
       }
     }
   } else {
-    is_same = false;
+    return false;
   }
-  return is_same;
+  return true;
 }
 
 void S21Matrix::sum_matrix(const S21Matrix& other) {
@@ -281,6 +299,12 @@ S21Matrix S21Matrix::operator*(const S21Matrix& other) const {
   return new_matrix;
 }
 
+S21Matrix S21Matrix::operator*(double num) const {
+  S21Matrix new_matrix(*this);
+  new_matrix.mul_number(num);
+  return new_matrix;
+}
+
 bool S21Matrix::operator==(const S21Matrix& other) const {
   return eq_matrix(other);
 }
@@ -325,10 +349,6 @@ double S21Matrix::operator()(int i, int j) const {
   return matrix_[index(i, j)];
 }
 
-bool S21Matrix::is_empty_object() const {
-  return (matrix_ == nullptr);
-}
-
 // converts i and j into single array`s koefficient.
 int S21Matrix::index(int i, int j) const {
   return i + j + i * (columns_ - 1);
@@ -349,18 +369,10 @@ S21Matrix S21Matrix::minor_at(int m, int n) const {
   return result;
 }
 
-S21Matrix operator*(const double& num, const S21Matrix& matrix) {
-  S21Matrix new_matrix(matrix);
-  new_matrix.mul_number(num);
-  return new_matrix;
-}
-
-std::ostream& operator<<(std::ostream& os, const S21Matrix& matrix) {
-  for (int i = 0; i < matrix.rows_; ++i) {
-    for (int j = 0; j < matrix.columns_; ++j) {
-      os << std::setw(2) << matrix(i, j) << " ";
+void S21Matrix::copy_matrices(S21Matrix &matrix1, const S21Matrix &matrix2, int rows, int cols) {
+  for (int i = 0; i < rows; ++i) {
+    for (int j = 0; j < cols; ++j) {
+      matrix1(i, j) = matrix2(i, j);
     }
-    os << std::endl;
   }
-  return os;
 }

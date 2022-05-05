@@ -14,7 +14,7 @@ all: s21_matrix_oop.a test
 	$(CC) $(STD) $(CFLAG) -c -o $@ $< $(INCLUDE)
 
 s21_matrix_oop.a: ./build/obj/s21_matrix_oop.o
-	ar -crs $@ $^
+	ar -cr $@ $^
 	ranlib $@
 
 # test build
@@ -36,10 +36,6 @@ gcov_report: test
 	@echo report path is `pwd`/report/index.html
 
 .PHONY: linter clean
-
-main: s21_matrix_oop.a main.cpp
-	g++ -o $@ main.cpp $<
-	./$@
 
 linter:
 	@echo cpplint

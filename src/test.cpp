@@ -1,6 +1,5 @@
-#include <s21_matrix_oop.h>
+#include "s21_matrix_oop.h"
 #include <gtest/gtest.h>
-#include <iostream>
 
 namespace MatrixConstructorsSutie {
   TEST(ConstructorsSutie, ConstructorTest) {
@@ -63,11 +62,9 @@ namespace MatrixConstructorsSutie {
 
     ASSERT_EQ(matrix1.get_rows(), 0);
     ASSERT_EQ(matrix1.get_columns(), 0);
-    ASSERT_EQ(matrix1.is_empty_object(), true);
 
     ASSERT_EQ(matrix2.get_rows(), 6);
     ASSERT_EQ(matrix2.get_columns(), 6);
-    ASSERT_EQ(matrix2.is_empty_object(), false);
   }
 
   TEST(ConstructorsSutie, MoveTest3) {
@@ -76,11 +73,9 @@ namespace MatrixConstructorsSutie {
 
     ASSERT_EQ(matrix1.get_rows(), 0);
     ASSERT_EQ(matrix1.get_columns(), 0);
-    ASSERT_EQ(matrix1.is_empty_object(), true);
 
     ASSERT_EQ(matrix2.get_rows(), 10);
     ASSERT_EQ(matrix2.get_columns(), 1);
-    ASSERT_EQ(matrix2.is_empty_object(), false);
   }
 
   TEST(ConstructorsSutie, DestructorTest) {
@@ -203,7 +198,6 @@ namespace MatrixMutatorsSuite {
     ASSERT_NO_THROW(matrix.set_columns(1));
     S21Matrix answer(3, 1);
     answer.set_values({1, 1, 1});
-    std::cout << answer << std::endl << matrix;
     ASSERT_TRUE(matrix == answer);
   }
 }  // namespace MatrixMutatorsSuite
@@ -838,6 +832,16 @@ namespace MatrixOperatorMulSuite {
 
     ASSERT_TRUE(matrix2.eq_matrix(answer_matrix));
   }
+
+  TEST(OperatorMulSuite, Test15) {
+    S21Matrix matrix1(2, 2);
+    matrix1.set_values({1, 2, 3, 4});
+    S21Matrix matrix2 = std::move(matrix1 * 2);
+    S21Matrix answer_matrix(2, 2);
+    answer_matrix.set_values({2, 4, 6, 8});
+
+    ASSERT_TRUE(matrix2.eq_matrix(answer_matrix));
+  }
 }  // namespace MatrixOperatorMulSuite
 
 namespace MatrixOperatorEqualSuite {
@@ -854,5 +858,9 @@ namespace MatrixOperatorEqualSuite {
 
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
+  char *a = new char[10]();
+  for (int i = 0; i < 10; ++i) {
+    std::cout << a[i];
+  }
   return RUN_ALL_TESTS();
 }
